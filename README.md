@@ -11,7 +11,7 @@
 2. Clone your fork down on your local machine
 3. Open your project in an IDE of your choice
 
-## Interview Steps
+## Pre-Interview Steps
 1. Create a react application
 2. Github will be your Backend API (https://docs.github.com/en/rest)
 3. Display Users Profiles (Name, Profile small profile pic) out on a styled list. Users to display: [joshatxantie, joeatxantie, yours, other random ones you find...]
@@ -27,5 +27,4 @@
 
 ## Keep in Mind
 1. Get to the project to an MVP state, before going into detail (Styling, etc..). Focus on functionality!
-2. Watch the time to pace yourself. We will stop you once the allotted time is up
-3. Get creative, the steps are just an outline of what is needed.
+2. Get creative, the steps are just an outline of what is needed.
