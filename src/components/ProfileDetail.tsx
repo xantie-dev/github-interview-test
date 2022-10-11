@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import ExtendedProfileInfo  from '../types/ExtendedProfileInfo';
 import PageContainer from './PageContainer';
 import styled from 'styled-components';
+import RepoInfo from '../types/RepoInfo';
 
 const Pageheader = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ const Pageheader = styled.div`
 const ProfileDetail = () => {
   const params = useParams();
   const [profileData, setProfileData] = useState<ExtendedProfileInfo>();
+  const [topRepos, setTopRepos] = useState<RepoInfo[]>([]);
 
   useEffect(() => {
     const getProfileDetails = async () => {
@@ -51,6 +53,35 @@ const ProfileDetail = () => {
 
     getProfileDetails();
   }, [setProfileData])
+  
+  useEffect(() => {
+    const getTopRepos = async () => {
+      let baseUrl = `https://api.github.com/users/${params.login}/repos`
+      let req = await fetch(baseUrl);
+
+      if (req.status != 200) {
+        return;
+      }
+
+      let reqResult = await req.json();
+
+      if (reqResult.length == 0) {
+        return;
+      }
+
+      let repoArray: RepoInfo[] = [];
+
+      for (const repo of reqResult) {
+        repoArray.push({
+          name: repo.name,
+          link: repo.html_url
+        })
+      }
+      setTopRepos(repoArray);
+    }
+
+    getTopRepos();
+  }, [setTopRepos])
 
   return (
     <PageContainer>
@@ -59,15 +90,24 @@ const ProfileDetail = () => {
       )}
 
       {profileData && (
-        <Pageheader>
-          <img src={profileData.profileImageLink}></img>
-          <div>
-            <h1>{profileData.name ? profileData.name : profileData.login}</h1>
-            <h3>@{profileData.login}</h3>
-            <p>{profileData.bio}</p>
-            <a href={profileData.link}>View profile</a>
-          </div>
-        </Pageheader>
+        <>
+          <Pageheader>
+            <img src={profileData.profileImageLink}></img>
+            <div>
+              <h1>{profileData.name ? profileData.name : profileData.login}</h1>
+              <h3>@{profileData.login}</h3>
+              <p>{profileData.bio}</p>
+              <a href={profileData.link}>View profile</a>
+            </div>
+          </Pageheader>
+
+          <h2>Repos</h2>
+          {topRepos !== null && topRepos.length !== undefined && topRepos.length > 0 && topRepos.map((repo) => (
+            <div>
+                <a href={repo.link}>{repo.name}</a>
+            </div>
+          ))}
+        </>
       )}
     </PageContainer>
   )
